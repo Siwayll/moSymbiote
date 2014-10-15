@@ -99,7 +99,7 @@ class File
      */
     public function getName()
     {
-        $name = $this->workDir . DS . $this->id . '.' . $this->ext;
+        $name = $this->workDir . DIRECTORY_SEPARATOR . $this->id . '.' . $this->ext;
 
         $this->lastName = $name;
 
