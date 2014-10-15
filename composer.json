@@ -1,0 +1,23 @@
+{
+  "name": "siwayll/mosymbiote",
+  "type": "framework",
+  "description": "plugin for mollicute",
+  "keywords": ["cli", "plugin", "php", "mollicute"],
+  "homepage": "https://github.com/Siwayll/mosymbiote",
+  "license": "BEER-WARE LICENSE",
+  "authors": [
+  {
+    "name": "Siwaÿll",
+    "email": "sana.th.labs@gmail.com",
+    "role": "Developer"
+  }
+  ],
+    "require": {
+      "php": ">=5.4.0"
+    },
+    "autoload": {
+      "psr-4": {
+        "Siwayll\\MoSymbiote\\": ""
+      }
+    }
+}
