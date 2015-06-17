@@ -10,6 +10,7 @@ namespace Siwayll\MoSymbiote\Progress;
 
 use \Siwayll\Mollicute\Command;
 use \Siwayll\Mollicute\Core as Mollicute;
+use \Siwayll\Deuton\Display;
 
 /**
  * Mycoplasma
@@ -39,22 +40,31 @@ class Core
      */
     public function progress($resource, $downloadSize, $downloaded, $uploadSize, $uploaded)
     {
-        echo "\r" . $this->curl->getOpt(CURLOPT_URL) . '  ';
+        $line = "\r";
+        $line .= str_pad($this->countPlan, 6);
+        $line .= $this->curl->getOpt(CURLOPT_URL) . '  ';
+        $value = '{.c:red}wait...{.reset}';
         if ($downloadSize > 0) {
             $percent = $downloaded / $downloadSize  * 100;
-            echo str_pad(number_format($percent, 2, '.', ' '), 7);
-            return;
+            $value = number_format($percent, 2, '.', ' ') . '%';
+            $value = str_pad($value, 10);
+            if ($downloaded > 0) {
+                $value = '{.c:green}' . $value . '{.reset}';
+            } else {
+                $value = '{.c:yellow}' . $value . '{.reset}';
+            }
         }
         if ($downloaded > 0) {
-            echo str_pad(number_format($downloaded, 0, '.', ' '), 7);
-            return;
+            $value = number_format($downloaded, 0, '.', ' ');
+            $value = str_pad($value, 10);
+            $value = '{.c:green}' . $value . '{.reset}';
         }
-
-        echo 'wait...';
+        $line .= $value;
+        Display::write($line);
     }
 
     /**
-     * Ecriture du resultat de l'aspiration dans un fichier
+     * Préparation à l'affichage de la progression
      *
      * @param Mollicute $moll    Plan d'aspiration
      *
@@ -77,5 +87,42 @@ class Core
             ->setFinalOpt(CURLOPT_NOPROGRESS, false)
             ->setFinalOpt(CURLOPT_PROGRESSFUNCTION, [$this, 'progress'])
         ;
+    }
+
+    /**
+     * Ecriture du resultat de l'aspiration dans un fichier
+     *
+     * @param Command   $cmd     Commande en cours
+     * @param Mollicute $moll    Plan d'aspiration
+     *
+     * @return array
+     */
+    public function before(Command $cmd, Mollicute $moll)
+    {
+        $this->countPlan = $moll->countPlan();
+    }
+
+
+    /**
+     * Ecriture du resultat de l'aspiration dans un fichier
+     *
+     * @param Command   $cmd     Commande en cours
+     * @param string    $content Resultat de l'aspiration
+     * @param Mollicute $moll    Plan d'aspiration
+     *
+     * @return array
+     */
+    public function after(Command $cmd, $content, Mollicute $moll)
+    {
+        $color = 'green';
+        if (curl_error($this->curl->get()) !== '') {
+            $color = 'red';
+        }
+        $line = "\r{.c:" . $color . '}'
+              . $this->curl->getOpt(CURLOPT_URL)
+              . '                         {.reset}'
+        ;
+
+        Display::line($line);
     }
 }
