@@ -48,8 +48,12 @@ class Core
         $tag = '[' . $matches[1] . ']';
 
         foreach ($cmd->getDeclination($matches[1]) as $data) {
-            $url = str_replace($tag, $data, $cmd->getUrl());
             $result = clone $cmd;
+            if (is_array($data)) {
+                $result->set('declinationData', $data);
+                $data = $data[0];
+            }
+            $url = str_replace($tag, $data, $cmd->getUrl());
             $result->setUrl($url);
 
             if (strpos($result->getFileName(), $tag) !== false) {
