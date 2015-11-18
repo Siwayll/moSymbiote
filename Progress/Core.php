@@ -42,7 +42,7 @@ class Core
     {
         $line = "\r";
         $line .= str_pad($this->countPlan, 6);
-        $line .= $this->curl->getOpt(CURLOPT_URL) . '  ';
+        $line .= substr($this->curl->getOpt(CURLOPT_URL), 0, 200) . '  ';
         $value = '{.c:red}wait...{.reset}';
         if ($downloadSize > 0) {
             $percent = $downloaded / $downloadSize  * 100;
