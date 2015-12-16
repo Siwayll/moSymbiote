@@ -90,6 +90,29 @@ class Core
     }
 
     /**
+     * @param Mollicute $moll
+     *
+     * @return callable
+     */
+    public function getTickSleep()
+    {
+        return [$this, 'tickSleep'];
+    }
+
+    /**
+     * Affichage du compteur de temporisation
+     *
+     * @param int $count Compteur
+     */
+    public function tickSleep($count)
+    {
+        $line = "\r";
+        $line .= str_pad($this->countPlan, 6);
+        $line .= str_pad($count, '6', ' ', STR_PAD_BOTH);
+        Display::write($line);
+    }
+
+    /**
      * Ecriture du resultat de l'aspiration dans un fichier
      *
      * @param Command   $cmd     Commande en cours

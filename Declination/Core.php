@@ -56,7 +56,7 @@ class Core
             $url = str_replace($tag, $data, $cmd->getUrl());
             $result->setUrl($url);
 
-            if (strpos($result->getFileName(), $tag) !== false) {
+            if (method_exists($result, 'getFileName') && strpos($result->getFileName(), $tag) !== false) {
                 $newName = str_replace($tag, $data, $result->getFileName());
                 $result->setFileName($newName);
                 unset($newName);
