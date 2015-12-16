@@ -29,13 +29,14 @@ class Core
     /**
      * Chargement des variations de la commande
      *
-     * @param Command   $cmd  Commande en cours
-     * @param Mollicute $moll Plan d'aspiration
+     * @param Command   $cmd     Commande en cours
+     * @param string    $content Resultat de l'aspiration
+     * @param Mollicute $moll    Plan d'aspiration
      *
      * @return array
      * @throws \Siwayll\Mollicute\Abort si un plan est chargé
      */
-    public function before(Command $cmd, Mollicute $moll)
+    public function before(Command $cmd, $content, Mollicute $moll)
     {
         if ($cmd->declination !== true) {
             return;

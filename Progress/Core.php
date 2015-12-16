@@ -66,11 +66,13 @@ class Core
     /**
      * Préparation à l'affichage de la progression
      *
+     * @param Command   $cmd     Commande en cours
+     * @param string    $content Resultat de l'aspiration
      * @param Mollicute $moll    Plan d'aspiration
      *
      * @return array
      */
-    public function init(Mollicute $moll)
+    public function init($cmd, $content, Mollicute $moll)
     {
         if ($this->init !== false) {
             return;
@@ -116,11 +118,12 @@ class Core
      * Ecriture du resultat de l'aspiration dans un fichier
      *
      * @param Command   $cmd     Commande en cours
+     * @param string    $content Resultat de l'aspiration
      * @param Mollicute $moll    Plan d'aspiration
      *
      * @return array
      */
-    public function before(Command $cmd, Mollicute $moll)
+    public function before(Command $cmd, $content, Mollicute $moll)
     {
         $this->countPlan = $moll->countPlan();
     }
