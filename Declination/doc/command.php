@@ -21,7 +21,7 @@ class Command
      *
      * @return Command
      */
-    public function declination()
+    public function declinationActivation()
     {
     }
 

@@ -39,8 +39,21 @@ class CommandPlug
      * @param Command $cmd Commande en cours
      *
      * @return Command
+     * @deprecated
      */
     public static function declination($cmd)
+    {
+        return self::declinationActivation($cmd);
+    }
+
+    /**
+     * Active la génération d'un plan
+     *
+     * @param Command $cmd Commande en cours
+     *
+     * @return Command
+     */
+    public static function declinationActivation($cmd)
     {
         $cmd->declination = true;
         return $cmd;
