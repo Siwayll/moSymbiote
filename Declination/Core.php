@@ -54,10 +54,13 @@ class Core
                 $result->set('declinationData', $data);
                 $data = $data[0];
             }
+            if (is_object($data)) {
+                $result->set('declinationData', $data);
+            }
             $url = str_replace($tag, $data, $cmd->getUrl());
             $result->setUrl($url);
 
-            if (method_exists($result, 'getFileName') && strpos($result->getFileName(), $tag) !== false) {
+            if ($result->hasMethod('getFileName') && strpos($result->getFileName(), $tag) !== false) {
                 $newName = str_replace($tag, $data, $result->getFileName());
                 $result->setFileName($newName);
                 unset($newName);
