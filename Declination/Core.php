@@ -8,6 +8,7 @@
 
 namespace Siwayll\MoSymbiote\Declination;
 
+use Siwayll\Mollicute\Abort;
 use \Siwayll\Mollicute\Command;
 use \Siwayll\Mollicute\Core as Mollicute;
 
@@ -42,33 +43,30 @@ class Core
             return;
         }
 
-        if (!preg_match('#\[([a-z0-9]+)\]#', $cmd->getUrl(), $matches)) {
-            return;
+        foreach ($cmd->declGenerator as $key => $generator) {
+            $tag = '[' . $key . ']';
+            foreach ($cmd->getDeclination($key) as $data) {
+                $result = clone $cmd;
+                if (is_array($data)) {
+                    $result->set('declinationData', $data);
+                    $data = $data[0];
+                }
+                if (is_object($data)) {
+                    $result->set('declinationData', $data);
+                }
+                $url = str_replace($tag, $data, $cmd->getUrl());
+                $result->setUrl($url);
+
+                if ($result->hasMethod('getFileName') && strpos($result->getFileName(), $tag) !== false) {
+                    $newName = str_replace($tag, $data, $result->getFileName());
+                    $result->setFileName($newName);
+                    unset($newName);
+                }
+                $result->declination = false;
+                $moll->add($result);
+            }
         }
 
-        $tag = '[' . $matches[1] . ']';
-
-        foreach ($cmd->getDeclination($matches[1]) as $data) {
-            $result = clone $cmd;
-            if (is_array($data)) {
-                $result->set('declinationData', $data);
-                $data = $data[0];
-            }
-            if (is_object($data)) {
-                $result->set('declinationData', $data);
-            }
-            $url = str_replace($tag, $data, $cmd->getUrl());
-            $result->setUrl($url);
-
-            if ($result->hasMethod('getFileName') && strpos($result->getFileName(), $tag) !== false) {
-                $newName = str_replace($tag, $data, $result->getFileName());
-                $result->setFileName($newName);
-                unset($newName);
-            }
-
-            $moll->add($result);
-        }
-
-        throw new \Siwayll\Mollicute\Abort('cancel');
+        throw new Abort('cancel');
     }
 }
